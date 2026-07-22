@@ -1,0 +1,251 @@
+{
+  "uuid": "9276ace7-b370-48c5-9a5a-76c5b38a7f3b",
+  "lastMigration": 33,
+  "name": "Weighted responses custom templating",
+  "endpointPrefix": "",
+  "latency": 0,
+  "port": 3000,
+  "hostname": "",
+  "folders": [],
+  "routes": [
+    {
+      "uuid": "537af068-404b-42b5-9111-16018a06b798",
+      "type": "http",
+      "documentation": "",
+      "method": "get",
+      "endpoint": "weighted",
+      "responses": [
+        {
+          "uuid": "ad795cb6-809e-4ac6-a990-6212f7c8c10d",
+          "body": "{ \"message\": \"Success path\" }",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "95e68adf-d546-4bc2-bd8c-ce10607cb64a",
+          "body": "{ \"message\": \"Randomized unauthorized\" }",
+          "latency": 0,
+          "statusCode": 401,
+          "label": "",
+          "headers": [],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [
+            {
+              "target": "templating",
+              "modifier": "{{int 0 4}}",
+              "value": "4",
+              "invert": false,
+              "operator": "equals"
+            }
+          ],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
+    },
+    {
+      "uuid": "a403cc58-036a-480e-93b2-6fed835083aa",
+      "type": "http",
+      "documentation": "",
+      "method": "get",
+      "endpoint": "weighted-with-var",
+      "responses": [
+        {
+          "uuid": "11a1a142-4e9f-4171-b34a-ad246de125da",
+          "body": "{ \"message\": \"Success path\" }",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "69ee04f1-bcfc-4e2a-9162-bda3d9cd9eb6",
+          "body": "{ \"message\": \"Randomized unauthorized\" }",
+          "latency": 0,
+          "statusCode": 401,
+          "label": "",
+          "headers": [],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [
+            {
+              "target": "templating",
+              "modifier": "{{setGlobalVar 'rand' (int 0 100)}}{{lt (getGlobalVar 'rand') 5}}",
+              "value": "true",
+              "invert": false,
+              "operator": "equals"
+            }
+          ],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "caaea1ac-2c47-48a8-bc6b-115b05963069",
+          "body": "{ \"message\": \"Randomized too many requests\" }",
+          "latency": 0,
+          "statusCode": 429,
+          "label": "",
+          "headers": [],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [
+            {
+              "target": "templating",
+              "modifier": "{{gte (getGlobalVar 'rand') 5}}",
+              "value": "true",
+              "invert": false,
+              "operator": "equals"
+            },
+            {
+              "target": "templating",
+              "modifier": "{{lt (getGlobalVar 'rand') 15}}",
+              "value": "true",
+              "invert": false,
+              "operator": "equals"
+            }
+          ],
+          "rulesOperator": "AND",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "515130a8-0c3b-415f-873b-66cf7efd62a0",
+          "body": "{ \"message\": \"Randomized internal server error\" }",
+          "latency": 0,
+          "statusCode": 500,
+          "label": "",
+          "headers": [],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [
+            {
+              "target": "templating",
+              "modifier": "{{gte (getGlobalVar 'rand') 15}}",
+              "value": "true",
+              "invert": false,
+              "operator": "equals"
+            },
+            {
+              "target": "templating",
+              "modifier": "{{lt (getGlobalVar 'rand') 45}}",
+              "value": "true",
+              "invert": false,
+              "operator": "equals"
+            }
+          ],
+          "rulesOperator": "AND",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null,
+      "streamingMode": null,
+      "streamingInterval": 0
+    }
+  ],
+  "rootChildren": [
+    {
+      "type": "route",
+      "uuid": "537af068-404b-42b5-9111-16018a06b798"
+    },
+    {
+      "type": "route",
+      "uuid": "a403cc58-036a-480e-93b2-6fed835083aa"
+    }
+  ],
+  "proxyMode": false,
+  "proxyHost": "",
+  "proxyRemovePrefix": false,
+  "tlsOptions": {
+    "enabled": false,
+    "type": "CERT",
+    "pfxPath": "",
+    "certPath": "",
+    "keyPath": "",
+    "caPath": "",
+    "passphrase": ""
+  },
+  "cors": true,
+  "headers": [
+    {
+      "key": "Content-Type",
+      "value": "application/json"
+    },
+    {
+      "key": "Access-Control-Allow-Origin",
+      "value": "*"
+    },
+    {
+      "key": "Access-Control-Allow-Methods",
+      "value": "GET,POST,PUT,PATCH,DELETE,HEAD,OPTIONS"
+    },
+    {
+      "key": "Access-Control-Allow-Headers",
+      "value": "Content-Type, Origin, Accept, Authorization, Content-Length, X-Requested-With"
+    }
+  ],
+  "proxyReqHeaders": [
+    {
+      "key": "",
+      "value": ""
+    }
+  ],
+  "proxyResHeaders": [
+    {
+      "key": "",
+      "value": ""
+    }
+  ],
+  "data": [],
+  "callbacks": []
+}
